@@ -5,6 +5,7 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loginSuccess, setLoginSuccess] = useState(false); // Track login success
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -12,10 +13,12 @@ const Login = () => {
     try {
       const data = await loginUser({ username, password });
       console.log('Login successful:', data);
-      // Handle success (e.g., redirect user or set auth state)
+      setLoginSuccess(true); // Show success message
+      setError(''); // Clear any previous errors
     } catch (err) {
       console.error('Login failed:', err.response?.data || err.message);
       setError('Invalid username or password');
+      setLoginSuccess(false); // Hide success message if there's an error
     }
   };
 
@@ -23,6 +26,13 @@ const Login = () => {
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-blue-500">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
+        
+        {/* Success Message */}
+        {loginSuccess && (
+          <p className="text-green-500 text-center mb-4">User logged in successfully!</p>
+        )}
+        
+        {/* Error Message */}
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         
         <form onSubmit={handleSubmit} className="space-y-4">
